@@ -2,6 +2,7 @@ package com.tamjayz.FedBank.service;
 
 import com.tamjayz.FedBank.dto.AccountInfo;
 import com.tamjayz.FedBank.dto.BankResponse;
+import com.tamjayz.FedBank.dto.EmailDetails;
 import com.tamjayz.FedBank.dto.UserRequest;
 import com.tamjayz.FedBank.model.User;
 import com.tamjayz.FedBank.repository.UserRepository;
@@ -16,6 +17,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
 
     @Override
@@ -46,6 +50,13 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         User saveUser = userRepository.save(newUser);
+        // Send email alert
+        EmailDetails emailDetails = EmailDetails.builder()
+                .recipient(saveUser.getEmail())
+                .subject("ACCOUNT CREATION")
+                .messageBody("Congratulation your account has been successfully created! \n Your Account Details: \n Account Name: \n " + saveUser.getFirstName() + " " + saveUser.getLastName() + " " + saveUser.getOtherName()+ "\n Account Number: " + saveUser.getAccountNumber())
+                .build();
+        emailService.sendEmailAlert(emailDetails);
         return  BankResponse.builder()
                 .responseCode(AccountUtils.ACCOUNT_CREATION_SUCCESS)
                 .responseMessage(AccountUtils.ACCOUNT_CREATION_MESSAGE)
