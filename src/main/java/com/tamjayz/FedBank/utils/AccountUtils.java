@@ -10,6 +10,15 @@ public class AccountUtils {
     public static final String ACCOUNT_CREATION_SUCCESS = "002";
     public static final String ACCOUNT_CREATION_MESSAGE = "Account has been created successfully!";
 
+    public static final String ACCOUNT_NOT_EXIST_CODE= "003";
+    public static final String ACCOUNT_NOT_EXIST_MESSAGE = "User with the Account Number does not exist";
+
+    public static final String ACCOUNT_FOUND_CODE = "004";
+    public static final String ACCOUNT_FOUND_MESSAGE = "User Account Found";
+
+    public static final String ACCOUNT_CREDITED_SUCCESS_CODE = "005";
+    public static final String ACCOUNT_CREDITED_SUCCESS_MESSAGE = "The User Account was credited successfully";
+
     public static String generateAccountNumber(){
         /*
          * Random number that start with
