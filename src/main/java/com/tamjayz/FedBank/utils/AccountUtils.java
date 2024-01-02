@@ -19,6 +19,12 @@ public class AccountUtils {
     public static final String ACCOUNT_CREDITED_SUCCESS_CODE = "005";
     public static final String ACCOUNT_CREDITED_SUCCESS_MESSAGE = "The User Account was credited successfully";
 
+    public static final String INSUFFICIENT_BALANCE_CODE = "006";
+    public static final String INSUFFICIENT_BALANCE_MESSAGE = "Insufficient Balance in your Account!";
+
+    public static final String ACCOUNT_DEBITED_SUCCESS_CODE = "007";
+    public static final String ACCOUNT_DEBITED_SUCCESS_MESSAGE = "Your Account was debited successfully.";
+
     public static String generateAccountNumber(){
         /*
          * Random number that start with

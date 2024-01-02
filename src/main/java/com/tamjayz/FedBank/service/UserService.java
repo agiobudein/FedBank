@@ -1,9 +1,6 @@
 package com.tamjayz.FedBank.service;
 
-import com.tamjayz.FedBank.dto.BankResponse;
-import com.tamjayz.FedBank.dto.CreditDebitRequest;
-import com.tamjayz.FedBank.dto.EnquiryRequest;
-import com.tamjayz.FedBank.dto.UserRequest;
+import com.tamjayz.FedBank.dto.*;
 
 public interface UserService {
 
@@ -11,6 +8,9 @@ public interface UserService {
 
     BankResponse balanceEnquiry(EnquiryRequest request);
     String namedEnquiry(EnquiryRequest request);
+    BankResponse debitAccount(CreditDebitRequest request);
 
-    BankResponse CreditAccount(CreditDebitRequest request);
+    BankResponse creditAccount(CreditDebitRequest request);
+
+    BankResponse transfer(TransferRequest request);
 }

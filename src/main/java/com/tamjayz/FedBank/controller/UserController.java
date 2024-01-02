@@ -22,7 +22,11 @@ public class UserController {
 
     @PostMapping("/credit")
     public BankResponse creditAccount(@RequestBody CreditDebitRequest request){
-        return userService.CreditAccount(request);
+        return userService.creditAccount(request);
+    }
+
+    public BankResponse debitAccount(@RequestBody CreditDebitRequest request){
+        return userService.debitAccount(request);
     }
 
     @GetMapping("/balanceEnquiry")
