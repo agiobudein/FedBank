@@ -5,6 +5,7 @@ import com.tamjayz.FedBank.model.User;
 import com.tamjayz.FedBank.repository.UserRepository;
 import com.tamjayz.FedBank.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,7 +21,10 @@ public class UserServiceImpl implements UserService{
     private EmailService emailService;
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -45,6 +49,7 @@ public class UserServiceImpl implements UserService{
                 .accountNumber(AccountUtils.generateAccountNumber())
                 .accountBalance(BigDecimal.ZERO)
                 .email(userRequest.getEmail())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
                 .phoneNumber(userRequest.getPhoneNumber())
                 .alternativePhoneNumber(userRequest.getAlternativePhoneNumber())
                 .status("ACTIVE")
@@ -116,7 +121,7 @@ public class UserServiceImpl implements UserService{
         userToCredit.setAccountBalance(userToCredit.getAccountBalance().add(request.getAmount()));
         userRepository.save(userToCredit);
 
-        // save into transaction table
+        // save into transaction table Credit
         TransactionDto transactionDto = TransactionDto.builder()
                 .accountNumber(userToCredit.getAccountNumber())
                 .transactionType("Credit")
@@ -172,6 +177,13 @@ public class UserServiceImpl implements UserService{
         else {
             userToDebit.setAccountBalance(userToDebit.getAccountBalance().subtract(request.getAmount()));
             userRepository.save(userToDebit);
+            // save into transaction table Debit
+            TransactionDto transactionDto = TransactionDto.builder()
+                    .accountNumber(userToDebit.getAccountNumber())
+                    .transactionType("Debit")
+                    .amount(request.getAmount())
+                    .build();
+            transactionService.saveTransaction(transactionDto);
             return BankResponse.builder()
                     .responseCode(AccountUtils.ACCOUNT_DEBITED_SUCCESS_CODE)
                     .responseMessage(AccountUtils.ACCOUNT_DEBITED_SUCCESS_MESSAGE)
@@ -212,6 +224,14 @@ public class UserServiceImpl implements UserService{
                 .messageBody("The sum of " + request.getAmount() + " has been deducted from your account! Your current balance is " + sourceAccount.getAccountBalance())
                 .build();
         emailService.sendEmailAlert(debitAlert);
+
+        // save into transaction table Debit
+        TransactionDto transactionDto = TransactionDto.builder()
+                .accountNumber(sourceAccount.getAccountNumber())
+                .transactionType("Transfer")
+                .amount(request.getAmount())
+                .build();
+        transactionService.saveTransaction(transactionDto);
 
         User destinationAccount = userRepository.findByAccountNumber(request.getDestinationAccountNumber());
         destinationAccount.setAccountBalance(destinationAccount.getAccountBalance().add(request.getAmount()));
