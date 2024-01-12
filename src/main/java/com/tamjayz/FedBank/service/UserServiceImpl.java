@@ -1,10 +1,14 @@
 package com.tamjayz.FedBank.service;
 
+import com.tamjayz.FedBank.config.JwtTokenProvider;
 import com.tamjayz.FedBank.dto.*;
 import com.tamjayz.FedBank.model.User;
 import com.tamjayz.FedBank.repository.UserRepository;
 import com.tamjayz.FedBank.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +29,12 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
 
 
     @Override
@@ -73,6 +83,8 @@ public class UserServiceImpl implements UserService{
                         .build())
                 .build();
     }
+
+
 
     @Override
     public BankResponse balanceEnquiry(EnquiryRequest request) {
@@ -250,5 +262,25 @@ public class UserServiceImpl implements UserService{
                 .accountInfo(null)
                 .build();
 
+    }
+
+    @Override
+    public BankResponse login(LoginDto loginDto) {
+        Authentication authentication = null;
+        authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
+        );
+
+        EmailDetails loginAlert = EmailDetails.builder()
+                .subject("You're logged in!")
+                .recipient(loginDto.getEmail())
+                .messageBody("You login to your account. If you didn't initialize this request. kindly contact the bank..")
+                .build();
+        emailService.sendEmailAlert(loginAlert);
+
+        return BankResponse.builder()
+                .responseCode("Login Success")
+                .responseMessage(jwtTokenProvider.generateToken(authentication))
+                .build();
     }
 }
