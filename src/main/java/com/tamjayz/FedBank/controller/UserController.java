@@ -24,7 +24,7 @@ public class UserController {
             responseCode = "201",
             description = "http status 201 created"
     )
-    @PostMapping("/users")
+    @PostMapping("/register")
     public BankResponse createAccount(@RequestBody UserRequest userRequest){
         return userService.createAccount(userRequest);
     }

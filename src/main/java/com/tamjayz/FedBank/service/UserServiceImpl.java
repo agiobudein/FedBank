@@ -2,6 +2,7 @@ package com.tamjayz.FedBank.service;
 
 import com.tamjayz.FedBank.config.JwtTokenProvider;
 import com.tamjayz.FedBank.dto.*;
+import com.tamjayz.FedBank.model.Role;
 import com.tamjayz.FedBank.model.User;
 import com.tamjayz.FedBank.repository.UserRepository;
 import com.tamjayz.FedBank.utils.AccountUtils;
@@ -63,6 +64,7 @@ public class UserServiceImpl implements UserService{
                 .phoneNumber(userRequest.getPhoneNumber())
                 .alternativePhoneNumber(userRequest.getAlternativePhoneNumber())
                 .status("ACTIVE")
+                .role(Role.valueOf("ROLE_ADMIN"))
                 .build();
 
         User saveUser = userRepository.save(newUser);
@@ -263,6 +265,7 @@ public class UserServiceImpl implements UserService{
                 .build();
 
     }
+
 
     @Override
     public BankResponse login(LoginDto loginDto) {
