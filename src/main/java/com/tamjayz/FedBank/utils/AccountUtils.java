@@ -1,6 +1,7 @@
 package com.tamjayz.FedBank.utils;
 
 import java.time.Year;
+import java.util.Random;
 
 public class AccountUtils {
 
@@ -50,6 +51,20 @@ public class AccountUtils {
         StringBuilder accountNumber = new StringBuilder();
         return  accountNumber.append(year).append(randomNumber).toString();
 
+    }
+
+    // Method to generate random otp
+    public static String generateToken(){
+        StringBuilder otp = new StringBuilder();
+
+        Random random = new Random();
+        int count = 0;
+
+        while (count < 4){
+            otp.append(random.nextInt(10));
+            ++count;
+        }
+        return otp.toString();
     }
 
 }

@@ -6,12 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BankResponse {
-    private String responseCode;
-    private String responseMessage;
-    private AccountInfo accountInfo;
-    private OtpResponse otpResponse;
+@Builder
+public class OtpResponse {
+    private boolean isOtpValid;
 }
