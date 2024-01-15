@@ -20,7 +20,7 @@ public class OtpController {
     public BankResponse sendOtp(OtpRequest request){
         return otpService.sendOtp(request);
     }
-    
+
     @PostMapping("validateOtp")
     public BankResponse validateOtp(OtpValidationRequest request){
         return otpService.validateOtp(request);
